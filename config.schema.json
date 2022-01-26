@@ -1,5 +1,5 @@
 {
-  "pluginAlias": "ExampleHomebridgePlugin",
+  "pluginAlias": "XiaomiYeelightSupport",
   "pluginType": "platform",
   "singular": true,
   "schema": {
@@ -8,8 +8,54 @@
       "name": {
         "title": "Name",
         "type": "string",
-        "required": true,
-        "default": "Example Dynamic Platform"
+        "default": "XiaomiYeelightSupport",
+        "required": true
+      },
+      "timeout": {
+        "title": "Timeout for requests",
+        "type": "integer",
+        "default": "5000",
+        "minimum": 0,
+        "maximum": 600000,
+        "required": false,
+        "description": "The timeout allowed for lights to respond to requests (in ms)"
+      },
+      "interval": {
+        "title": "Polling interval for requests (0 means never)",
+        "type": "integer",
+        "default": 60000,
+        "minimum": 5000,
+        "maximum": 600000,
+        "required": false,
+        "description": "The frequency that the lights will be queried for updates (in ms)"
+      },
+      "lights": {
+        "type": "array",
+        "items": {
+          "title": "Add Lights",
+          "description": "Add lights manually based on their IP address and token.",
+          "type": "object",
+          "properties": {
+            "ipAddress": {
+              "title": "IP Address of the light",
+              "type": "string",
+              "required": true,
+              "description": "LAN IP address of the light"
+            },
+            "token": {
+              "title": "Encryption Token",
+              "type": "string",
+              "required": true,
+              "description": "Encryption token of the light. See Readme."
+            },
+            "name": {
+              "title": "Name of the light",
+              "type": "string",
+              "required": false,
+              "description": "This name will be displayed in the logs instead if the id"
+            }
+          }
+        }
       }
     }
   }
