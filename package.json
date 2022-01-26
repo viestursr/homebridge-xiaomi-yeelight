@@ -1,5 +1,4 @@
 {
-  "private": true,
   "displayName": "Xiaomi Yeelight Support",
   "name": "homebridge-xiaomi-yeelight",
   "version": "1.0.0",
@@ -21,13 +20,13 @@
     "lint": "eslint src/**.ts --max-warnings=0",
     "watch": "npm run build && npm link && nodemon",
     "build": "rimraf ./dist && tsc",
-    "prepublishOnly": "npm run lint && npm run build"
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "homebridge-plugin"
   ],
   "dependencies": {
-    "miio": "github:viestursr/miio"
+    "miio": "https://viestursr@github.com/viestursr/miio.git"
   },
   "devDependencies": {
     "@types/node": "^16.10.9",
