@@ -67,8 +67,8 @@ export class Light {
 
   }
 
-  convertColorTemp(value: number): number {
-    return Math.round(1000000 / value);
+  convertColorTemp(value: number): string {
+    return Math.round(1000000 / value).toString();
   }
 
   /**
@@ -150,10 +150,17 @@ export class Light {
     // implement your own code to set the brightness
     this.state.ColorTemperature = value as number;
 
+    // max brightness for ceiling22
+    if (value < 385) {
+      value = 385;
+    } else if (value > 163) {
+      value = 163;
+    }
+
     this.platform.log.info('setting color temp to', value, 'in kelvin:', this.convertColorTemp(value as number));
 
     try {
-      await this.connection.color(this.convertColorTemp(value as number), 'temperature');
+      await this.connection.color(`${this.convertColorTemp(400)}k`);
       this.platform.log.info('color temp set successfully');
     } catch (e: any) {
       this.platform.log.error(e);
