@@ -157,7 +157,7 @@ export class Light {
     this.platform.log.info('setting color temp to', value, 'in kelvin:', this.convertColorTempFromMiredToKelvin(value as number));
 
     try {
-      await this.connection.colorthis.convertColorTempFromMiredToKelvin(value as number);
+      await this.connection.color(this.convertColorTempFromMiredToKelvin(value as number));
       this.platform.log.info('color temp set successfully');
     } catch (e: any) {
       this.platform.log.error(e);
