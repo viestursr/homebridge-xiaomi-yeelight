@@ -151,9 +151,9 @@ export class Light {
     this.state.ColorTemperature = value as number;
 
     // max brightness for ceiling22
-    if (value < 385) {
+    if (value > 385) {
       value = 385;
-    } else if (value > 163) {
+    } else if (value < 163) {
       value = 163;
     }
 
