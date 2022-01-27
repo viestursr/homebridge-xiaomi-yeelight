@@ -56,13 +56,23 @@ export class Light {
       .onGet(this.getOn.bind(this));               // GET - bind to the `getOn` method below
 
     // // register handlers for the Brightness Characteristic
-    // this.service.getCharacteristic(this.platform.Characteristic.Brightness)
-    //   .onSet(this.setBrightness.bind(this));       // SET - bind to the 'setBrightness` method below
+    this.service.getCharacteristic(this.platform.Characteristic.Brightness)
+      .onSet(this.setBrightness.bind(this))       // SET - bind to the 'setBrightness` method below
+      .onGet(this.getBrightness.bind(this));       // SET - bind to the 'setBrightness` method below
 
     // // register handlers for the ColorTemperature Characteristic
-    // this.service.getCharacteristic(this.platform.Characteristic.ColorTemperature)
-    //   .onSet(this.setColorTemperature.bind(this));       // SET - bind to the 'setColorTemperature` method below
+    this.service.getCharacteristic(this.platform.Characteristic.ColorTemperature)
+      .onSet(this.setColorTemperature.bind(this))       // SET - bind to the 'setColorTemperature` method below
+      .onGet(this.getColorTemperature.bind(this));       // SET - bind to the 'setColorTemperature` method below
 
+  }
+
+  convertColorTempFromKelvinToMired(value: number) {
+    return 1000000 / value;
+  }
+
+  convertColorTempFromMiredToKelvin(value: number) {
+    return 1000000 / value;
   }
 
   /**
@@ -110,10 +120,62 @@ export class Light {
   //  * Handle "SET" requests from HomeKit
   //  * These are sent when the user changes the state of an accessory, for example, changing the Brightness
   //  */
-  // async setBrightness(value: CharacteristicValue) {
-  //   // implement your own code to set the brightness
-  //   this.exampleStates.Brightness = value as number;
+  async setBrightness(value: CharacteristicValue) {
+    // implement your own code to set the brightness
+    this.state.Brightness = value as number;
 
-  //   this.platform.log.debug('Set Characteristic Brightness -> ', value);
-  // }
+    this.platform.log.info('setting brightness to', value);
+
+    try {
+      await this.connection.setBrightness(value);
+      this.platform.log.info('brightness set successfully');
+    } catch (e: any) {
+      this.platform.log.error(e);
+    }
+  }
+
+  // /**
+  //  * Handle "SET" requests from HomeKit
+  //  * These are sent when the user changes the state of an accessory, for example, changing the Brightness
+  //  */
+  async getBrightness(): Promise<CharacteristicValue> {
+    try {
+      this.platform.log.info('requesting brightness');
+      const brightness = await this.connection.brightness();
+
+      return brightness;
+    } catch (e: any) {
+      this.platform.log.error(e);
+      throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+    }
+  }
+
+  async setColorTemperature(value: CharacteristicValue) {
+    // implement your own code to set the brightness
+    this.state.ColorTemperature = value as number;
+
+    this.platform.log.info('setting color temp to', value, 'in kelvin:', this.convertColorTempFromMiredToKelvin(value as number));
+
+    try {
+      await this.connection.colorthis.convertColorTempFromMiredToKelvin(value as number);
+      this.platform.log.info('color temp set successfully');
+    } catch (e: any) {
+      this.platform.log.error(e);
+    }
+  }
+
+  async getColorTemperature(): Promise<CharacteristicValue> {
+    try {
+      this.platform.log.info('requesting color temperature');
+      let colorTemp = await this.connection.color();
+      colorTemp = this.convertColorTempFromKelvinToMired(colorTemp.values[0]);
+
+      this.platform.log.info(colorTemp);
+
+      return colorTemp;
+    } catch (e: any) {
+      this.platform.log.error(e);
+      throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+    }
+  }
 }
