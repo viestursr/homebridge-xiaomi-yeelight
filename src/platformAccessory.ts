@@ -67,12 +67,8 @@ export class Light {
 
   }
 
-  convertColorTempFromKelvinToMired(value: number) {
-    return 1000000 / value;
-  }
-
-  convertColorTempFromMiredToKelvin(value: number) {
-    return 1000000 / value;
+  convertColorTemp(value: number): number {
+    return Math.round(1000000 / value);
   }
 
   /**
@@ -154,10 +150,10 @@ export class Light {
     // implement your own code to set the brightness
     this.state.ColorTemperature = value as number;
 
-    this.platform.log.info('setting color temp to', value, 'in kelvin:', this.convertColorTempFromMiredToKelvin(value as number));
+    this.platform.log.info('setting color temp to', value, 'in kelvin:', this.convertColorTemp(value as number));
 
     try {
-      await this.connection.color(this.convertColorTempFromMiredToKelvin(value as number));
+      await this.connection.color(this.convertColorTemp(value as number));
       this.platform.log.info('color temp set successfully');
     } catch (e: any) {
       this.platform.log.error(e);
@@ -168,7 +164,7 @@ export class Light {
     try {
       this.platform.log.info('requesting color temperature');
       let colorTemp = await this.connection.color();
-      colorTemp = this.convertColorTempFromKelvinToMired(colorTemp.values[0]);
+      colorTemp = this.convertColorTemp(colorTemp.values[0]);
 
       this.platform.log.info(colorTemp);
 
