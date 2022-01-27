@@ -153,7 +153,7 @@ export class Light {
     this.platform.log.info('setting color temp to', value, 'in kelvin:', this.convertColorTemp(value as number));
 
     try {
-      await this.connection.color(this.convertColorTemp(value as number));
+      await this.connection.color(this.convertColorTemp(value as number), 'temperature');
       this.platform.log.info('color temp set successfully');
     } catch (e: any) {
       this.platform.log.error(e);
