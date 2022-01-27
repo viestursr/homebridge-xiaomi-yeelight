@@ -151,10 +151,10 @@ export class Light {
     this.state.ColorTemperature = value as number;
 
     // max brightness for ceiling22
-    if (value > 385) {
-      value = 385;
-    } else if (value < 163) {
-      value = 163;
+    if (value > 384) {
+      value = 384;
+    } else if (value < 164) {
+      value = 164;
     }
 
     this.platform.log.info('setting color temp to', value, 'in kelvin:', this.convertColorTemp(value as number));
