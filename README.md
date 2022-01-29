@@ -10,15 +10,16 @@
 
 Xiaomi branded Yeelight support for Homebridge: https://github.com/nfarina/homebridge.
 
-There are several plugins for Yeelights already, for example https://github.com/cellcortex/homebridge-yeelighter.
-However, this plugin focuses on Xiaomi branded Yeelights that were [stripped of the ability to control them via LAN](https://github.com/home-assistant/core/issues/46997#issuecomment-809927764), rendering the above and similar plugins useless for their control.
-I got extremely frustrated by that, considering that these lamps are almost identical to Yeelight lamps. This, combined with the fact that my Xiaomi Yeelight lamps are extremely unreliable in Homekit, motivated me to create my first plugin for HomeBridge to alleviate these issues.
+There are several plugins for Yeelights already, for example https://github.com/cellcortex/homebridge-yeelighter. If you have a Yeelight branded Yeelight that still supports LAN control, my plugin isn't for you.
 
-I'm happy to report that for me this plugin is incomparably more reliable than their own HomeKit integration. The lights have not gone into "Not Responding" state since, while previously they went into such state several times per day. 
+This plugin focuses on Xiaomi branded Yeelights that were [stripped of the ability to control them via LAN](https://github.com/home-assistant/core/issues/46997#issuecomment-809927764), rendering the above and similar plugins useless for their control.
+I got very frustrated by that, considering that these lamps are almost identical to Yeelight lamps. This, combined with the fact that my Xiaomi Yeelight lamps are extremely unreliable in Homekit, motivated me to create my first plugin for Homebridge to alleviate these issues.
+
+I'm happy to report that for me this plugin is incomparably more reliable than their own HomeKit integration. The lights have not gone into a "Not Responding" state since, while previously they went into such state several times per day. 
 
 
 ## Caveats
-- Obtaining a device encryption token is required. This is still possible, however it's inconvenient. See "Setting up the lights" section at the bottom.
+- Obtaining a device encryption token is required. Althought inconvenient, it's still possible. See "Setting up the lights" section at the bottom.
 - Currently I've implemented support only for the `yeelink.light.ceiling22` (the round ceiling LED light) model, since that's the only one available to me. Underlying dependencies (miio) had to be adjusted to support this light as well, since it's not out of the box. You can use `miiocli yeelight --ip 192.168.0.100 --token <secret> info` CLI command to see the model of your device. If it's not `yeelink.light.ceiling22` you can let me know and if it doesn't have any special API requirements I can add that in rather quickly.
  
 ## Installation
@@ -69,7 +70,7 @@ To do so is left as an excercise to the user. Personally I used an Android phone
 - [Tokens from Mi Home logs](https://python-miio.readthedocs.io/en/latest/discovery.html#tokens-from-mi-home-logs)
 - [Tokens from backups](https://python-miio.readthedocs.io/en/latest/discovery.html#tokens-from-backups)
 - [Tokens from rooted device](https://python-miio.readthedocs.io/en/latest/discovery.html#tokens-from-rooted-device)
-- [A GH Repo that mentions several token extraction methods](https://github.com/Maxmudjon/com.xiaomi-miio/blob/master/docs/obtain_token.md)
+- [A GH Repo that lists several token extraction methods](https://github.com/Maxmudjon/com.xiaomi-miio/blob/master/docs/obtain_token.md)
 
 
 ## 🤝 Contributing
