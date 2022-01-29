@@ -56,6 +56,9 @@ export class XiaomiYeelightPlatform implements DynamicPlatformPlugin {
         // the accessory already exists
         this.log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
 
+        existingAccessory.context.device = light;
+        this.api.updatePlatformAccessories([existingAccessory]);
+
         new Light(this, existingAccessory);
       } else {
         this.log.info('Adding new accessory:', light.name);
