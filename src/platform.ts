@@ -3,11 +3,6 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { Light } from './platformAccessory';
 
-/**
- * HomebridgePlatform
- * This class is the main constructor for your plugin, this is where you should
- * parse the user config and discover/register accessories with Homebridge.
- */
 export class XiaomiYeelightPlatform implements DynamicPlatformPlugin {
   public readonly Service: typeof Service = this.api.hap.Service;
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
@@ -50,20 +45,8 @@ export class XiaomiYeelightPlatform implements DynamicPlatformPlugin {
    * must not be registered again to prevent "duplicate UUID" errors.
    */
   discoverDevices = async () => {
-    // try {
-    //   await miioDevice.setBrightness(50);
-    // } catch (e: any) {
-    //   this.log.error(e);
-    // }
-
-    // try {
-    //   this.log.info('color', await miioDevice.color());
-    // } catch (e: any) {
-    //   this.log.error(e);
-    // }
-
     const addedLights = this.config?.lights || [];
-    this.log.info(`adding ${addedLights.length} lights`);
+    this.log.info(`Adding ${addedLights.length} lights`);
 
     for (const light of addedLights) {
       const uuid = this.api.hap.uuid.generate(light.ipAddress);
@@ -73,20 +56,8 @@ export class XiaomiYeelightPlatform implements DynamicPlatformPlugin {
         // the accessory already exists
         this.log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
 
-        // if you need to update the accessory.context then you should run `api.updatePlatformAccessories`. eg.:
-        // existingAccessory.context.device = device;
-        // this.api.updatePlatformAccessories([existingAccessory]);
-
-        // create the accessory handler for the restored accessory
-        // this is imported from `platformAccessory.ts`
         new Light(this, existingAccessory);
-
-        // it is possible to remove platform accessories at any time using `api.unregisterPlatformAccessories`, eg.:
-        // remove platform accessories when no longer present
-        // this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [existingAccessory]);
-        // this.log.info('Removing existing accessory from cache:', existingAccessory.displayName);
       } else {
-        // the accessory does not yet exist, so we need to create it
         this.log.info('Adding new accessory:', light.name);
 
         // create a new accessory
@@ -96,8 +67,6 @@ export class XiaomiYeelightPlatform implements DynamicPlatformPlugin {
         // the `context` property can be used to store any data about the accessory you may need
         accessory.context.device = light;
 
-        // create the accessory handler for the newly create accessory
-        // this is imported from `platformAccessory.ts`
         new Light(this, accessory);
 
         // link the accessory to your platform

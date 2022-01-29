@@ -11,23 +11,12 @@
         "default": "XiaomiYeelightSupport",
         "required": true
       },
-      "timeout": {
-        "title": "Timeout for requests",
-        "type": "integer",
-        "default": "5000",
-        "minimum": 0,
-        "maximum": 600000,
+      "debugLogging": {
+        "title": "Verbose Logging",
+        "type": "boolean",
+        "default": "false",
         "required": false,
-        "description": "The timeout allowed for lights to respond to requests (in ms)"
-      },
-      "interval": {
-        "title": "Polling interval for requests (0 means never)",
-        "type": "integer",
-        "default": 60000,
-        "minimum": 5000,
-        "maximum": 600000,
-        "required": false,
-        "description": "The frequency that the lights will be queried for updates (in ms)"
+        "description": "Will do extra logging for all actions"
       },
       "lights": {
         "type": "array",
@@ -52,7 +41,7 @@
               "title": "Name of the light",
               "type": "string",
               "required": false,
-              "description": "This name will be displayed in the logs instead if the id"
+              "description": "The name of the light"
             }
           }
         }
