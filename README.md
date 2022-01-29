@@ -72,6 +72,7 @@ To do so is left as an excercise to the user. Personally I used an Android phone
 - [Tokens from rooted device](https://python-miio.readthedocs.io/en/latest/discovery.html#tokens-from-rooted-device)
 - [A GH Repo that lists several token extraction methods](https://github.com/Maxmudjon/com.xiaomi-miio/blob/master/docs/obtain_token.md)
 
+⚠️ After setting up the lights, I would suggest considering blocking their access to the Internet. I wouldn't want my lamps to be forced some OTA update that restricts them even further to Xiaomi's own home management app.
 
 ## 🤝 Contributing
 
