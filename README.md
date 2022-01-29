@@ -1,150 +1,81 @@
-
-<p align="center">
-
-<img src="https://github.com/homebridge/branding/raw/master/logos/homebridge-wordmark-logo-vertical.png" width="150">
-
+<h1 align="center">💡 homebridge-xiaomi-yeelight 💡</h1>
+<p>
+  <a href="https://www.npmjs.com/package/homebridge-xiaomi-yeelight" target="_blank">
+    <img alt="Version" src="https://img.shields.io/npm/v/homebridge-xiaomi-yeelight.svg">
+  </a>
+  <a href="#" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+  </a>
 </p>
 
+Xiaomi branded Yeelight support for Homebridge: https://github.com/nfarina/homebridge.
 
-# Homebridge Platform Plugin Template
+There are several plugins for Yeelights already, for example https://github.com/cellcortex/homebridge-yeelighter.
+However, this plugin focuses on Xiaomi branded Yeelights that were [stripped of the ability to control them via LAN](https://github.com/home-assistant/core/issues/46997#issuecomment-809927764), rendering the above and similar plugins useless for their control.
+I got extremely frustrated by that, considering that these lamps are almost identical to Yeelight lamps. This, combined with the fact that my Xiaomi Yeelight lamps are extremely unreliable in Homekit, motivated me to create my first plugin for HomeBridge to alleviate these issues.
 
-This is a template Homebridge platform plugin and can be used as a base to help you get started developing your own plugin.
+I'm happy to report that for me this plugin is incomparably more reliable than their own HomeKit integration. The lights have not gone into "Not Responding" state since, while previously they went into such state several times per day. 
 
-This template should be used in conjunction with the [developer documentation](https://developers.homebridge.io/). A full list of all supported service types, and their characteristics is available on this site.
 
-## Clone As Template
+## Caveats
+- Obtaining a device encryption token is required. This is still possible, however it's inconvenient. See "Setting up the lights" section at the bottom.
+- Currently I've implemented support only for the `yeelink.light.ceiling22` (the round ceiling LED light) model, since that's the only one available to me. Underlying dependencies (miio) had to be adjusted to support this light as well, since it's not out of the box. You can use `miiocli yeelight --ip 192.168.0.100 --token <secret> info` CLI command to see the model of your device. If it's not `yeelink.light.ceiling22` you can let me know and if it doesn't have any special API requirements I can add that in rather quickly.
+ 
+## Installation
 
-Click the link below to create a new GitHub Repository using this template, or click the *Use This Template* button above.
+You might want to update npm through: `$ sudo npm -g i npm@latest`
 
-<span align="center">
+Install this plugin through: `$ sudo npm -g i homebridge-xiaomi-yeelight`
 
-### [Create New Repository From Template](https://github.com/homebridge/homebridge-plugin-template/generate)
+Add this plugin to your HomeBridge platform list, see Configuration section.
 
-</span>
 
-## Setup Development Environment
+## Configuration
 
-To develop Homebridge plugins you must have Node.js 12 or later installed, and a modern code editor such as [VS Code](https://code.visualstudio.com/). This plugin template uses [TypeScript](https://www.typescriptlang.org/) to make development easier and comes with pre-configured settings for [VS Code](https://code.visualstudio.com/) and ESLint. If you are using VS Code install these extensions:
-
-* [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-
-## Install Development Dependencies
-
-Using a terminal, navigate to the project folder and run this command to install the development dependencies:
 
 ```
-npm install
+"platforms": [
+  {
+    "name": "XiaomiYeelightSupport",
+    "debugLogging": false,
+    "platform": "XiaomiYeelightSupport"
+  }
+]
 ```
 
-## Update package.json
-
-Open the [`package.json`](./package.json) and change the following attributes:
-
-* `name` - this should be prefixed with `homebridge-` or `@username/homebridge-` and contain no spaces or special characters apart from a dashes
-* `displayName` - this is the "nice" name displayed in the Homebridge UI
-* `repository.url` - Link to your GitHub repo
-* `bugs.url` - Link to your GitHub repo issues page
-
-When you are ready to publish the plugin you should set `private` to false, or remove the attribute entirely.
-
-## Update Plugin Defaults
-
-Open the [`src/settings.ts`](./src/settings.ts) file and change the default values:
-
-* `PLATFORM_NAME` - Set this to be the name of your platform. This is the name of the platform that users will use to register the plugin in the Homebridge `config.json`.
-* `PLUGIN_NAME` - Set this to be the same name you set in the [`package.json`](./package.json) file. 
-
-Open the [`config.schema.json`](./config.schema.json) file and change the following attribute:
-
-* `pluginAlias` - set this to match the `PLATFORM_NAME` you defined in the previous step.
-
-## Build Plugin
-
-TypeScript needs to be compiled into JavaScript before it can run. The following command will compile the contents of your [`src`](./src) directory and put the resulting code into the `dist` folder.
+The plugin supports setting the configuration through [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x).
+You'll be able to configure the device details there, or you can add them as a parameter in the JSON config:
 
 ```
-npm run build
+"lights": [
+    {
+        "ipAddress": "192.168.0.100", // local ip address of the light
+        "token": "<secret token>", // light encryption token, see Token section for more info
+        "name": "Dresser Light" // friendly name for the light
+    },
+    {
+        ...
+    }
+],
 ```
 
-## Link To Homebridge
+## Setting up the lights
 
-Run this command so your global install of Homebridge can discover the plugin in your development environment:
+Since Xiaomi/Yeelight has removed the option to control Xiaomi branded Yeelights via LAN, this process is more convoluted than it should be.
 
-```
-npm link
-```
+First of all, you have to obtain the encryption token of the light after adding it to one of the control applications (Xiaomi Home or Yeelight). 
+To do so is left as an excercise to the user. Personally I used an Android phone to set up the lights in the Yeelight app, then I downloaded app backup over ADB and extracted the token using Miio CLI from the backup. There are many possible approaches described to extract the token, choose one that fits you best. 
 
-You can now start Homebridge, use the `-D` flag so you can see debug log messages in your plugin:
-
-```
-homebridge -D
-```
-
-## Watch For Changes and Build Automatically
-
-If you want to have your code compile automatically as you make changes, and restart Homebridge automatically between changes you can run:
-
-```
-npm run watch
-```
-
-This will launch an instance of Homebridge in debug mode which will restart every time you make a change to the source code. It will load the config stored in the default location under `~/.homebridge`. You may need to stop other running instances of Homebridge while using this command to prevent conflicts. You can adjust the Homebridge startup command in the [`nodemon.json`](./nodemon.json) file.
-
-## Customise Plugin
-
-You can now start customising the plugin template to suit your requirements.
-
-* [`src/platform.ts`](./src/platform.ts) - this is where your device setup and discovery should go.
-* [`src/platformAccessory.ts`](./src/platformAccessory.ts) - this is where your accessory control logic should go, you can rename or create multiple instances of this file for each accessory type you need to implement as part of your platform plugin. You can refer to the [developer documentation](https://developers.homebridge.io/) to see what characteristics you need to implement for each service type.
-* [`config.schema.json`](./config.schema.json) - update the config schema to match the config you expect from the user. See the [Plugin Config Schema Documentation](https://developers.homebridge.io/#/config-schema).
-
-## Versioning Your Plugin
-
-Given a version number `MAJOR`.`MINOR`.`PATCH`, such as `1.4.3`, increment the:
-
-1. **MAJOR** version when you make breaking changes to your plugin,
-2. **MINOR** version when you add functionality in a backwards compatible manner, and
-3. **PATCH** version when you make backwards compatible bug fixes.
-
-You can use the `npm version` command to help you with this:
-
-```bash
-# major update / breaking changes
-npm version major
-
-# minor update / new features
-npm version update
-
-# patch / bugfixes
-npm version patch
-```
-
-## Publish Package
-
-When you are ready to publish your plugin to [npm](https://www.npmjs.com/), make sure you have removed the `private` attribute from the [`package.json`](./package.json) file then run:
-
-```
-npm publish
-```
-
-If you are publishing a scoped plugin, i.e. `@username/homebridge-xxx` you will need to add `--access=public` to command the first time you publish.
-
-#### Publishing Beta Versions
-
-You can publish *beta* versions of your plugin for other users to test before you release it to everyone.
-
-```bash
-# create a new pre-release version (eg. 2.1.0-beta.1)
-npm version prepatch --preid beta
-
-# publsh to @beta
-npm publish --tag=beta
-```
-
-Users can then install the  *beta* version by appending `@beta` to the install command, for example:
-
-```
-sudo npm install -g homebridge-example-plugin@beta
-```
+- [Tokens from Mi Home logs](https://python-miio.readthedocs.io/en/latest/discovery.html#tokens-from-mi-home-logs)
+- [Tokens from backups](https://python-miio.readthedocs.io/en/latest/discovery.html#tokens-from-backups)
+- [Tokens from rooted device](https://python-miio.readthedocs.io/en/latest/discovery.html#tokens-from-rooted-device)
+- [A GH Repo that mentions several token extraction methods](https://github.com/Maxmudjon/com.xiaomi-miio/blob/master/docs/obtain_token.md)
 
 
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!<br />
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
