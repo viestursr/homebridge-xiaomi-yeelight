@@ -51,6 +51,15 @@ export class Light {
       .onSet(this.setColorTemperature.bind(this))
       .onGet(this.getColorTemperature.bind(this));
 
+    if (accessory.context.device.hasRgbSupport) {
+      this.service.getCharacteristic(this.platform.Characteristic.Hue)
+        .onSet(this.setHue.bind(this))
+        .onGet(this.getHue.bind(this));
+
+      this.service.getCharacteristic(this.platform.Characteristic.Saturation)
+        .onSet(this.setSaturation.bind(this))
+        .onGet(this.getSaturation.bind(this));
+    }
   }
 
   isDebugLogging(): boolean {
@@ -150,6 +159,65 @@ export class Light {
       colorTemp = this.convertColorTemp(colorTemp.values[0]);
 
       return colorTemp;
+    } catch (e: any) {
+      this.platform.log.error(e);
+      throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+    }
+  }
+
+  async setHue(value: CharacteristicValue) {
+    if (this.isDebugLogging()) {
+      this.platform.log.info('setting hue to', value);
+    }
+
+    try {
+      await this.connection.color(1);
+
+      if (this.isDebugLogging()) {
+        this.platform.log.info('hue set successfully');
+      }
+    } catch (e: any) {
+      this.platform.log.error(e);
+    }
+  }
+
+  async getHue(): Promise<CharacteristicValue> {
+    try {
+      const hue = await this.connection.color();
+
+      this.platform.log.info('hue is', hue);
+
+      return hue;
+    } catch (e: any) {
+      this.platform.log.error(e);
+      throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+    }
+  }
+
+
+  async setSaturation(value: CharacteristicValue) {
+    if (this.isDebugLogging()) {
+      this.platform.log.info('setting saturation to', value);
+    }
+
+    try {
+      await this.connection.color(1);
+
+      if (this.isDebugLogging()) {
+        this.platform.log.info('saturation set successfully');
+      }
+    } catch (e: any) {
+      this.platform.log.error(e);
+    }
+  }
+
+  async getSaturation(): Promise<CharacteristicValue> {
+    try {
+      const hue = await this.connection.color();
+
+      this.platform.log.info('saturation is', hue);
+
+      return hue;
     } catch (e: any) {
       this.platform.log.error(e);
       throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
